@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlatePilot - Budget-Aware Student Diet Planner</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="theme-light">
+  <!-- Top Navigation Bar -->
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="brand">
+        <div class="brand-icon">🥗</div>
+        <div class="brand-text">
+          <h1>PlatePilot <span class="badge badge-accent">NutriNinja Cup</span></h1>
+          <p class="subtitle">Budget-Aware Student Diet Planner & Knapsack Optimizer</p>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <!-- Quick Demo Button -->
+        <button id="quick-demo-btn" class="btn btn-warning btn-sm pulse">
+          ⚡ Run Demo (₹120 Muscle Gain)
+        </button>
+        <!-- Print / PDF Cheat Sheet -->
+        <button id="print-cheat-sheet-btn" class="btn btn-secondary btn-sm">
+          📄 Printable PDF Cheat Sheet
+        </button>
+      </div>
+    </div>
+
+    <!-- Sub Navigation Tabs -->
+    <nav class="sub-nav">
+      <div class="tab-list">
+        <button class="nav-tab active" data-tab="tab-planner">
+          <span class="tab-icon">🍱</span> Meal Plan Optimizer
+        </button>
+        <button class="nav-tab" data-tab="tab-grocery">
+          <span class="tab-icon">🛒</span> Smart Grocery List
+        </button>
+        <button class="nav-tab" data-tab="tab-mess">
+          <span class="tab-icon">🏢</span> Hostel Mess Booster
+        </button>
+        <button class="nav-tab" data-tab="tab-pantry">
+          <span class="tab-icon">🥫</span> Pantry Leftovers
+        </button>
+        <button class="nav-tab" data-tab="tab-community">
+          <span class="tab-icon">💡</span> Dorm Recipe Hacks
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+    
+    <!-- ========================================== -->
+    <!-- TAB 1: MEAL PLAN OPTIMIZER -->
+    <!-- ========================================== -->
+    <section id="tab-planner" class="tab-panel active">
+      <div class="planner-grid">
+        
+        <!-- Left Column: Student Budget & Macro Profiler -->
+        <aside class="profiler-card card">
+          <div class="card-header">
+            <h2>⚙️ Student Budget & Macro Profiler</h2>
+            <span class="badge badge-info">Step 1</span>
+          </div>
+
+          <form id="profiler-form" class="profiler-form">
+            <!-- Budget Slider -->
+            <div class="form-group budget-group">
+              <div class="label-row">
+                <label for="daily-budget">Daily Food Budget</label>
+                <div class="budget-display">
+                  <span class="currency">₹</span>
+                  <span id="budget-val">120</span>
+                  <span class="unit">/day</span>
+                </div>
+              </div>
+              <input type="range" id="daily-budget" min="60" max="300" step="5" value="120" />
+              <div class="slider-ticks">
+                <span>₹60</span>
+                <span>₹100</span>
+                <span class="highlight">₹120</span>
+                <span>₹180</span>
+                <span>₹300</span>
+              </div>
+            </div>
+
+            <!-- Target Fitness Goal -->
+            <div class="form-group">
+              <label>Target Fitness Goal</label>
+              <div class="goal-grid">
+                <label class="goal-radio active" data-goal="muscle_gain">
+                  <input type="radio" name="fitness-goal" value="muscle_gain" checked />
+                  <span class="radio-icon">💪</span>
+                  <span class="radio-title">High Protein</span>
+                  <small>Muscle Gain (~2.1k kcal)</small>
+                </label>
+                <label class="goal-radio" data-goal="weight_loss">
+                  <input type="radio" name="fitness-goal" value="weight_loss" />
+                  <span class="radio-icon">🔥</span>
+                  <span class="radio-title">Deficit</span>
+                  <small>Fat Loss (~1.6k kcal)</small>
+                </label>
+                <label class="goal-radio" data-goal="maintenance">
+                  <input type="radio" name="fitness-goal" value="maintenance" />
+                  <span class="radio-icon">⚖️</span>
+                  <span class="radio-title">Maintenance</span>
+                  <small>Steady Energy</small>
+                </label>
+              </div>
+            </div>
+
+            <!-- Dietary Preference -->
+            <div class="form-group">
+              <label for="diet-pref">Dietary Preference</label>
+              <div class="select-wrapper">
+                <select id="diet-pref" class="form-control">
+                  <option value="eggetarian" selected>Eggetarian (Eggs + Veg)</option>
+                  <option value="vegetarian">Pure Vegetarian (Dairy + Plant)</option>
+                  <option value="vegan">Vegan (100% Plant-Based)</option>
+                  <option value="non-veg">Non-Vegetarian (Chicken, Fish, Eggs)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Regional Grocery Price Slider / Adjustment -->
+            <div class="form-group">
+              <div class="label-row">
+                <label for="price-multiplier">Regional Grocery Pricing</label>
+                <span id="region-label" class="badge badge-secondary">Median Suburbs (1.0x)</span>
+              </div>
+              <input type="range" id="price-multiplier" min="0.80" max="1.30" step="0.05" value="1.0" />
+              <div class="slider-ticks">
+                <span>Subsidized (0.8x)</span>
+                <span>Median (1.0x)</span>
+                <span>Metro (1.3x)</span>
+              </div>
+            </div>
+
+            <!-- Student Body Stats Accordion -->
+            <details class="stats-accordion">
+              <summary>👤 Fine-Tune Student Bio & Activity Stats</summary>
+              <div class="stats-grid">
+                <div class="input-item">
+                  <label for="student-weight">Weight (kg)</label>
+                  <input type="number" id="student-weight" class="form-control" value="65" min="40" max="140" />
+                </div>
+                <div class="input-item">
+                  <label for="student-height">Height (cm)</label>
+                  <input type="number" id="student-height" class="form-control" value="172" min="130" max="220" />
+                </div>
+                <div class="input-item">
+                  <label for="student-age">Age</label>
+                  <input type="number" id="student-age" class="form-control" value="20" min="16" max="35" />
+                </div>
+                <div class="input-item">
+                  <label for="student-activity">Activity</label>
+                  <select id="student-activity" class="form-control">
+                    <option value="sedentary">Desk Studying (1.2x)</option>
+                    <option value="light">Walking Campus (1.37x)</option>
+                    <option value="moderate" selected>Gym 3-4x / Active (1.55x)</option>
+                    <option value="active">Daily Sports / Intense (1.72x)</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <!-- Generate Button -->
+            <button type="submit" id="generate-plan-btn" class="btn btn-primary btn-block">
+              🚀 Generate Budget Diet Plan
+            </button>
+          </form>
+
+          <!-- Calculated RDA Goals Card -->
+          <div class="rda-summary">
+            <h3>Calculated Target RDA Goals</h3>
+            <div class="rda-badges">
+              <div class="rda-chip calories">
+                <span class="label">Target Kcal</span>
+                <span id="rda-calories" class="val">2,100</span>
+              </div>
+              <div class="rda-chip protein">
+                <span class="label">Target Protein</span>
+                <span id="rda-protein" class="val">95g</span>
+              </div>
+              <div class="rda-chip carbs">
+                <span class="label">Target Carbs</span>
+                <span id="rda-carbs" class="val">250g</span>
+              </div>
+              <div class="rda-chip fats">
+                <span class="label">Target Fats</span>
+                <span id="rda-fats" class="val">50g</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Column: Visualizer & Meal Plan Display -->
+        <div class="results-container">
+          
+          <!-- Top Visualizer Dashboard -->
+          <div class="visualizer-card card">
+            <div class="visualizer-header">
+              <div>
+                <h2>📊 Macro & Calorie Balance Visualizer</h2>
+                <p class="subtitle">Knapsack optimization balance vs daily RDA targets</p>
+              </div>
+              <div id="protein-efficiency-badge" class="badge badge-success">
+                ⭐ Protein Value: 0.80g / ₹
+              </div>
+            </div>
+
+            <div class="visualizer-body">
+              <!-- Doughnut Chart Container -->
+              <div class="chart-wrapper">
+                <canvas id="macroChart" width="220" height="220"></canvas>
+                <div class="chart-center-text">
+                  <span id="chart-center-calories">2,100</span>
+                  <small>kcal</small>
+                </div>
+              </div>
+
+              <!-- Metrics & Budget Meters -->
+              <div class="meters-container">
+                <!-- Daily Cost Budget Meter -->
+                <div class="meter-block">
+                  <div class="meter-label-row">
+                    <span>Daily Spend</span>
+                    <span id="cost-meter-text"><strong>₹120</strong> / ₹120</span>
+                  </div>
+                  <div class="progress-track">
+                    <div id="cost-meter-fill" class="progress-bar progress-cost" style="width: 100%;"></div>
+                  </div>
+                  <div class="meter-subtext">
+                    <span id="remaining-budget-text">Remaining: ₹0</span>
+                    <span id="budget-status-pill" class="pill pill-success">100% Utilized (Optimized)</span>
+                  </div>
+                </div>
+
+                <!-- Macro Progress Bars -->
+                <div class="macro-bars">
+                  <div class="macro-row">
+                    <div class="macro-name">
+                      <span class="dot dot-protein"></span> Protein
+                    </div>
+                    <div class="macro-track">
+                      <div id="bar-protein" class="bar-fill bar-protein" style="width: 100%;"></div>
+                    </div>
+                    <span id="val-protein" class="macro-stat">96g / 95g</span>
+                  </div>
+
+                  <div class="macro-row">
+                    <div class="macro-name">
+                      <span class="dot dot-carbs"></span> Carbs
+                    </div>
+                    <div class="macro-track">
+                      <div id="bar-carbs" class="bar-fill bar-carbs" style="width: 95%;"></div>
+                    </div>
+                    <span id="val-carbs" class="macro-stat">257g / 260g</span>
+                  </div>
+
+                  <div class="macro-row">
+                    <div class="macro-name">
+                      <span class="dot dot-fats"></span> Fats
+                    </div>
+                    <div class="macro-track">
+                      <div id="bar-fats" class="bar-fill bar-fats" style="width: 92%;"></div>
+                    </div>
+                    <span id="val-fats" class="macro-stat">46g / 50g</span>
+                  </div>
+
+                  <div class="macro-row">
+                    <div class="macro-name">
+                      <span class="dot dot-fiber"></span> Fiber
+                    </div>
+                    <div class="macro-track">
+                      <div id="bar-fiber" class="bar-fill bar-fiber" style="width: 100%;"></div>
+                    </div>
+                    <span id="val-fiber" class="macro-stat">38g / 30g</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Meal Plan Display Screen (4 Cards) -->
+          <div class="meal-plan-section">
+            <div class="section-title-row">
+              <h3>🍽️ Generated Daily Meal Plan</h3>
+              <span class="text-muted">Knapsack selected 4 balanced student meals</span>
+            </div>
+
+            <div id="meals-grid" class="meals-grid">
+              <!-- Rendered dynamically by app.js: Breakfast, Lunch, Snack, Dinner -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: SMART GROCERY SHOPPING LIST -->
+    <!-- ========================================== -->
+    <section id="tab-grocery" class="tab-panel">
+      <div class="grocery-container card">
+        <div class="card-header">
+          <div>
+            <h2>🛒 Smart Weekly Grocery Shopping List</h2>
+            <p class="subtitle">Consolidates your meal plan ingredients into categorized bulk items with estimated savings</p>
+          </div>
+          <div class="view-controls">
+            <label>Duration:</label>
+            <div class="btn-group" id="grocery-duration-group">
+              <button class="btn btn-sm" data-days="1">1 Day</button>
+              <button class="btn btn-sm" data-days="3">3 Days</button>
+              <button class="btn btn-sm active" data-days="7">7 Days (Weekly)</button>
+            </div>
+            <button id="copy-grocery-btn" class="btn btn-outline btn-sm">📋 Copy to Clipboard</button>
+          </div>
+        </div>
+
+        <!-- Savings Banner -->
+        <div class="savings-banner">
+          <div class="savings-item">
+            <span class="caption">Loose Daily Cost:</span>
+            <span id="loose-cost-val" class="number">₹840</span>
+          </div>
+          <div class="savings-arrow">➔</div>
+          <div class="savings-item highlight">
+            <span class="caption">Bulk Supermarket / Mandi Cost:</span>
+            <span id="bulk-cost-val" class="number">₹655</span>
+          </div>
+          <div class="savings-badge badge badge-success">
+            🎉 Saves ₹185 (22%) by purchasing weekly bulk packs!
+          </div>
+        </div>
+
+        <!-- Categorized Ingredients Grid -->
+        <div id="grocery-categories" class="grocery-grid">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: HOSTEL MESS ALTERNATIVE MODE -->
+    <!-- ========================================== -->
+    <section id="tab-mess" class="tab-panel">
+      <div class="mess-container card">
+        <div class="card-header">
+          <div>
+            <h2>🏢 Hostel Mess Alternative Mode</h2>
+            <p class="subtitle">Analyze standard hostel mess food, detect macro deficiencies, and pick ₹8-₹15 campus supplements</p>
+          </div>
+        </div>
+
+        <div class="mess-selector-row">
+          <label for="mess-preset-select">Select Mess Meal:</label>
+          <select id="mess-preset-select" class="form-control">
+            <option value="mess-lunch-std">Hostel Mess Lunch (Watery Dal, White Rice, Aloo Cabbage Sabzi, Rotis)</option>
+            <option value="mess-dinner-std">Hostel Mess Dinner (Thin Dal, Lauki Sabzi, 3 Rotis, Rice)</option>
+            <option value="mess-breakfast-std">Hostel Mess Breakfast (Oily Poori Bhaji / Poha + Chai)</option>
+          </select>
+        </div>
+
+        <div class="mess-analysis-grid">
+          <!-- Mess Menu & Shortfall -->
+          <div class="mess-card sub-card">
+            <div class="card-title-row">
+              <h3>🍛 What the Mess Serves</h3>
+              <span id="mess-meal-type-badge" class="badge badge-warning">Lunch</span>
+            </div>
+            <p id="mess-description" class="mess-desc"></p>
+
+            <div class="mess-macro-pills">
+              <div class="pill">Calories: <strong id="mess-cal">640</strong> kcal</div>
+              <div class="pill danger">Protein: <strong id="mess-protein">14g</strong> <span class="deficit-tag">(-18g Shortfall!)</span></div>
+              <div class="pill">Carbs: <strong id="mess-carbs">112g</strong></div>
+              <div class="pill">Fats: <strong id="mess-fats">14g</strong></div>
+            </div>
+
+            <div class="mess-picks-box">
+              <h4>🎯 What to Pick in the Dining Hall:</h4>
+              <ul id="mess-picks-list"></ul>
+            </div>
+          </div>
+
+          <!-- Outside Cheap Supplements -->
+          <div class="supplements-card sub-card">
+            <div class="card-title-row">
+              <h3>⚡ Outside Budget Supplements (Under ₹15)</h3>
+              <span class="badge badge-success">Bridge the Protein Gap</span>
+            </div>
+            <p class="subtitle">Quick hacks you can buy at campus tapri, dairy booth, or prepare in your dorm:</p>
+            
+            <div id="supplements-list" class="supplements-grid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: PANTRY LEFTOVER OPTIMIZER -->
+    <!-- ========================================== -->
+    <section id="tab-pantry" class="tab-panel">
+      <div class="pantry-container card">
+        <div class="card-header">
+          <div>
+            <h2>🥫 Pantry Leftover Optimizer</h2>
+            <p class="subtitle">Select ingredients already in your hostel room. We discount them to ₹0 to slash grocery spend!</p>
+          </div>
+          <button id="apply-pantry-btn" class="btn btn-primary btn-sm">
+            ✨ Apply to Meal Plan
+          </button>
+        </div>
+
+        <p class="pantry-instruction">
+          Check the staples you currently have in your dorm shelf or fridge:
+        </p>
+
+        <div id="pantry-staples-grid" class="pantry-checklist-grid">
+          <!-- Filled dynamically with items like Eggs, Bread, Oats, Peanut Butter, Rice, Soya, etc. -->
+        </div>
+
+        <div class="pantry-summary-bar">
+          <span id="pantry-selected-count">0 items selected</span>
+          <span class="pantry-discount-tag">Ingredients selected are treated as ₹0 free stock</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: COMMUNITY BUDGET RECIPE BOARD -->
+    <!-- ========================================== -->
+    <section id="tab-community" class="tab-panel">
+      <div class="community-container card">
+        <div class="card-header">
+          <div>
+            <h2>💡 Community Dorm Recipe Board</h2>
+            <p class="subtitle">Crowd-sourced meal hacks shared by college students across India with verified costs</p>
+          </div>
+          <button id="open-submit-hack-btn" class="btn btn-accent btn-sm">
+            ➕ Share Your Dorm Hack
+          </button>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="hack-filter-tags">
+          <button class="tag-filter-btn active" data-filter="all">All Hacks</button>
+          <button class="tag-filter-btn" data-filter="#ElectricKettle">#ElectricKettle</button>
+          <button class="tag-filter-btn" data-filter="#Under20">#Under20</button>
+          <button class="tag-filter-btn" data-filter="#HighProtein">#HighProtein</button>
+          <button class="tag-filter-btn" data-filter="#NoCook">#NoCook</button>
+        </div>
+
+        <!-- Hacks Feed -->
+        <div id="community-hacks-feed" class="community-grid">
+          <!-- Filled dynamically -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: MEAL SWAP ALTERNATIVE ENGINE -->
+  <!-- ========================================== -->
+  <div id="swap-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 id="swap-modal-title">🔄 Swap Meal Alternative</h3>
+          <p id="swap-modal-subtitle" class="subtitle">Nutritionally equivalent, budget-compatible alternatives</p>
+        </div>
+        <button class="modal-close-btn" id="close-swap-modal">&times;</button>
+      </div>
+
+      <!-- Current Meal Overview -->
+      <div id="current-swap-meal-banner" class="swap-current-banner"></div>
+
+      <!-- Filter for Swap: e.g. Vegetarian only -->
+      <div class="swap-filter-bar">
+        <label>Filter Alternative Diet:</label>
+        <div class="btn-group" id="swap-diet-filter-group">
+          <button class="btn btn-sm" data-diet="all">All</button>
+          <button class="btn btn-sm active" data-diet="vegetarian">Vegetarian</button>
+          <button class="btn btn-sm" data-diet="vegan">Vegan</button>
+          <button class="btn btn-sm" data-diet="eggetarian">Eggetarian</button>
+        </div>
+      </div>
+
+      <!-- Alternatives List -->
+      <div id="swap-alternatives-list" class="alternatives-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: INGREDIENT COST & RECIPE BREAKDOWN -->
+  <!-- ========================================== -->
+  <div id="recipe-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 id="recipe-modal-title">🍲 Recipe & Ingredient Cost Breakdown</h3>
+          <p id="recipe-modal-meta" class="subtitle"></p>
+        </div>
+        <button class="modal-close-btn" id="close-recipe-modal">&times;</button>
+      </div>
+
+      <div class="recipe-modal-body">
+        <!-- Itemized Cost Table -->
+        <h4>💰 Itemized Cost Breakdown (Hostel Sourced)</h4>
+        <div class="cost-table-wrapper">
+          <table class="cost-table">
+            <thead>
+              <tr>
+                <th>Ingredient</th>
+                <th>Amount</th>
+                <th class="text-right">Estimated Cost</th>
+              </tr>
+            </thead>
+            <tbody id="recipe-ingredients-body"></tbody>
+            <tfoot>
+              <tr>
+                <th colspan="2">Total Meal Cost</th>
+                <th id="recipe-total-cost" class="text-right text-accent">₹35</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Cooking Instructions -->
+        <div class="instructions-section">
+          <h4>👨‍🍳 Hostel Cooking Instructions</h4>
+          <ol id="recipe-instructions-list" class="instructions-list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: SUBMIT COMMUNITY HACK -->
+  <!-- ========================================== -->
+  <div id="hack-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3>💡 Share Your Dorm Recipe Hack</h3>
+          <p class="subtitle">Help fellow hostellers eat nutritious food on a shoestring budget</p>
+        </div>
+        <button class="modal-close-btn" id="close-hack-modal">&times;</button>
+      </div>
+
+      <form id="submit-hack-form" class="hack-form">
+        <div class="form-group">
+          <label>Recipe Hack Title</label>
+          <input type="text" id="hack-title" class="form-control" placeholder="e.g. Soya Chunks Bhurji in Electric Kettle" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name / College</label>
+            <input type="text" id="hack-author" class="form-control" placeholder="e.g. Rahul (IIT Madras)" required />
+          </div>
+          <div class="form-group">
+            <label>Cost (₹)</label>
+            <input type="number" id="hack-cost" class="form-control" placeholder="18" min="5" max="100" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Estimated Protein (g)</label>
+            <input type="number" id="hack-protein" class="form-control" placeholder="20" min="0" max="60" />
+          </div>
+          <div class="form-group">
+            <label>Appliance Used</label>
+            <select id="hack-appliance" class="form-control">
+              <option value="Electric Kettle Only">Electric Kettle Only</option>
+              <option value="Single Pan / Induction">Single Pan / Induction</option>
+              <option value="No Cook / Shake">No Cook / Shake</option>
+              <option value="Microwave / Steam">Microwave / Steam</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Step-by-Step Hack & Secret Tips</label>
+          <textarea id="hack-description" rows="3" class="form-control" placeholder="Describe how you make it and where to buy cheap ingredients..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          🚀 Post Hack to Board
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Printable Refrigerator Cheat Sheet Section (Hidden on screen, shown in print) -->
+  <div id="printable-area" class="printable-only">
+    <div class="print-header">
+      <h2>PlatePilot - 7-Day Student Meal & Grocery Refrigerator Sheet</h2>
+      <p>Target: 2,100 Kcal | High Protein | Budget Cap: ₹120/Day | Student Verified</p>
+    </div>
+    <div id="print-content"></div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Application Scripts -->
+  <script src="exportPdf.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
